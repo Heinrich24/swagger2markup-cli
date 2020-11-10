@@ -61,6 +61,9 @@ bintray {
     }
 }
 
+
+
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
@@ -96,8 +99,10 @@ publishing {
                     d.appendNode('name', it.value)
                 }
             }
-            artifact sourcesJar
-            artifact javadocJar
+            afterEvaluate {
+	            artifact sourcesJar
+	            artifact javadocJar          
+            }
         }
     }
 }

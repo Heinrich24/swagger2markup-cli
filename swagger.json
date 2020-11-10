@@ -1,0 +1,340 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Ackermans-Location",
+    "version": "0.0.1",
+    "description": "This API exposes Master Data related to Ackermans. (For internal Use only)",
+    "termsOfService": ""
+  },
+  "schemes": [
+    "https",
+    "http"
+  ],
+  "host": "api-gw-qa.pepstores.com:443",
+  "basePath": "/ack-location/0.0.1",
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/xml",
+    "application/json"
+  ],
+  "securityDefinitions": {
+    "BasicAuth": {
+      "type": "basic"
+    },
+    "ApiKeyAuth": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "X-API-Key"
+    },
+    "OAuth2": {
+      "type": "oauth2",
+      "flow": "accessCode",
+      "authorizationUrl": "https://api-gw-qa.pepstores.com:443/authorize",
+      "tokenUrl": "https://api-gw-qa.pepstores.com:443/token",
+      "scopes": {
+        "read": "Grants read access",
+        "write": "Grants write access"
+      }
+    },
+    "default": {
+      "type": "oauth2",
+      "authorizationUrl": "https://api-gw-qa.pepstores.com:443/authorize",
+      "flow": "implicit",
+      "scopes": {}
+    }
+  },
+  "security": [
+    {
+      "ApiKeyAuth": []
+    },
+    {
+      "OAuth2": [
+        "read",
+        "write"
+      ]
+    }
+  ],
+  "paths": {
+    "/branch": {
+      "get": {
+        "tags": [
+          "Branch"
+        ],
+        "summary": "Retrieve information about branches",
+        "description": "Retrieve information about branches",
+        "operationId": "branch",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "companyId",
+            "in": "query",
+            "type": "number",
+            "description": "Unique identifier for the Company. Used when you want to retrieve a set of branches linked to a specific company.",
+            "required": true
+          },
+          {
+            "name": "branchId",
+            "in": "query",
+            "type": "number",
+            "description": "Unique identifier for the Branch. Used when you want to retrieve a specific branch.",
+            "required": false
+          },
+          {
+            "name": "branchTypeCode",
+            "in": "query",
+            "type": "string",
+            "description": "Unique identifier for a Branch type. Used when you want a specific type of branch.",
+            "required": false
+          },
+          {
+            "name": "provinceId",
+            "in": "query",
+            "type": "number",
+            "description": "Unique identifier for the Province. Used when you want to retireve a set of branches within a specific province.",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/branches"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        },
+        "deprecated": false,
+        "x-auth-type": "Application & Application User",
+        "x-throttling-tier": "Unlimited",
+        "x-mediation-script": "mc.setProperty('CONTENT_TYPE', 'application/json');\n\nvar companyId = mc.getProperty('query.param.companyId');\nvar branchId = mc.getProperty('query.param.branchId');\nvar branchTypeCode = mc.getProperty('query.param.branchTypeCode');\nvar provinceId = mc.getProperty('query.param.provinceId');\n\nif (companyId === null || companyId < 1) {\n  mc.setPayloadJSON('{ \"Error\": \"Company ID not specified.\" }');\n} else {\n  if (branchId !== null && branchId > 0) {\n    mc.setPayloadJSON('{ \"branch\" : [{ \"BranchIdNo\": 2566, \"BankDetailNo\": 4, \"BranchClimateIdNo\": \"string\", \"BranchConceptIdNo\": \"99\", \"BranchNodeIdNo\": 0, \"CompanyIdNo\": '+ companyId +', \"DivAdminMgrIdNo\": 53, \"InterfSystemIdNo\": 20, \"LbrDemarcGrpIdNo\": 5, \"LocConceptIdNo\": 0, \"LocDivNo\": 26, \"LoctypeIdNo\": 22, \"ProvinceIdNo\": ' + provinceId + ', \"BranchFinGradeCode\": \"D\", \"BranchTypeCode\": \"' + branchTypeCode + '\", \"LegalEntityCode\": \"ACLTD\", \"LocPayDivCode\": \"TBC\", \"TransportHubCode\": \"string\", \"LastCommsDate\": \"2020-11-05\", \"LogisticsCloseDate\": \"2020-11-05\", \"LogisticsOpenDate\": \"2020-11-05\", \"ModelCalcStartDate\": \"2020-11-05\", \"TrdCloseDate\": \"2020-11-05\", \"TrdOpenDate\": \"2020-11-05\", \"CashInTransitInd\": \"Y\", \"CashManagementInd\": \"Y\", \"DropSageInd\": \"Y\", \"SpareFloatAmdInd\": \"Y\", \"SttInd\": \"Y\", \"SundayTrdInd\": \"Y\", \"BackofficeSquareMeter\": 0, \"TrdSquareMeter\": 540, \"BranchCode\": \"' + branchId + '\", \"TransportDropCode\": \"string\", \"TransportRouteCode\": \"string\", \"PosBranchNo\": 1903, \"BrancEmail\": \"a1903@ackermans.co.za\", \"BranchFax\": \"017 6851334\", \"BranchMgrCellphone\": \"string\", \"BranchModemTelephone\": \"string\", \"BranchTelephone\": \"017 6851060\", \"BranchMgrName\": \"string\", \"BranchName\": \"Secunda Mall@Emba\", \"CitPickupFreq\": 6, \"SpareFloatAmt\": 3500, \"TillFloatAmt\": 500, \"NoOfTillFloats\": 5, \"CashLimitInDrawer\": 3500, \"TransporterIdNo\": 1, \"PosVersionCode\": \"string\", \"PosVersionStartDate\": \"2020-11-05\", \"LastUpdateDatetime\": \"2020-11-05\", \"Username\": \"POSUpld\", \"LocGeoTypeIdNo\": 3, \"CentralPosVersion\": \"string\" }]}');\n  } else {\n    mc.setPayloadJSON('{ \"branch\" : [{ \"BranchIdNo\": 2566, \"BankDetailNo\": 4, \"BranchClimateIdNo\": \"string\", \"BranchConceptIdNo\": \"99\", \"BranchNodeIdNo\": 0, \"CompanyIdNo\": '+ companyId +', \"DivAdminMgrIdNo\": 53, \"InterfSystemIdNo\": 20, \"LbrDemarcGrpIdNo\": 5, \"LocConceptIdNo\": 0, \"LocDivNo\": 26, \"LoctypeIdNo\": 22, \"ProvinceIdNo\": ' + provinceId + ', \"BranchFinGradeCode\": \"D\", \"BranchTypeCode\": \"' + branchTypeCode + '\", \"LegalEntityCode\": \"ACLTD\", \"LocPayDivCode\": \"TBC\", \"TransportHubCode\": \"string\", \"LastCommsDate\": \"2020-11-05\", \"LogisticsCloseDate\": \"2020-11-05\", \"LogisticsOpenDate\": \"2020-11-05\", \"ModelCalcStartDate\": \"2020-11-05\", \"TrdCloseDate\": \"2020-11-05\", \"TrdOpenDate\": \"2020-11-05\", \"CashInTransitInd\": \"Y\", \"CashManagementInd\": \"Y\", \"DropSageInd\": \"Y\", \"SpareFloatAmdInd\": \"Y\", \"SttInd\": \"Y\", \"SundayTrdInd\": \"Y\", \"BackofficeSquareMeter\": 0, \"TrdSquareMeter\": 540, \"BranchCode\": \"' + branchId + '\", \"TransportDropCode\": \"string\", \"TransportRouteCode\": \"string\", \"PosBranchNo\": 1903, \"BrancEmail\": \"a1903@ackermans.co.za\", \"BranchFax\": \"017 6851334\", \"BranchMgrCellphone\": \"string\", \"BranchModemTelephone\": \"string\", \"BranchTelephone\": \"017 6851060\", \"BranchMgrName\": \"string\", \"BranchName\": \"Secunda Mall@Emba\", \"CitPickupFreq\": 6, \"SpareFloatAmt\": 3500, \"TillFloatAmt\": 500, \"NoOfTillFloats\": 5, \"CashLimitInDrawer\": 3500, \"TransporterIdNo\": 1, \"PosVersionCode\": \"string\", \"PosVersionStartDate\": \"2020-11-05\", \"LastUpdateDatetime\": \"2020-11-05\", \"Username\": \"POSUpld\", \"LocGeoTypeIdNo\": 3, \"CentralPosVersion\": \"string\" }, { \"BranchIdNo\": 2567, \"BankDetailNo\": 4, \"BranchClimateIdNo\": \"string\", \"BranchConceptIdNo\": \"99\", \"BranchNodeIdNo\": 0, \"CompanyIdNo\": '+ companyId +', \"DivAdminMgrIdNo\": 28, \"InterfSystemIdNo\": 20, \"LbrDemarcGrpIdNo\": 5, \"LocConceptIdNo\": 0, \"LocDivNo\": 17, \"LoctypeIdNo\": 16, \"ProvinceIdNo\": ' + provinceId + ', \"BranchFinGradeCode\": \"F\", \"BranchTypeCode\": \"' + branchTypeCode + '\", \"LegalEntityCode\": \"ACLTD\", \"LocPayDivCode\": \"TBC\", \"TransportHubCode\": \"string\", \"LastCommsDate\": \"2020-11-05\", \"LogisticsCloseDate\": \"2020-11-05\", \"LogisticsOpenDate\": \"2020-11-05\", \"ModelCalcStartDate\": \"2020-11-05\", \"TrdCloseDate\": \"2020-11-05\", \"TrdOpenDate\": \"2020-11-05\", \"CashInTransitInd\": \"Y\", \"CashManagementInd\": \"Y\", \"DropSageInd\": \"Y\", \"SpareFloatAmdInd\": \"Y\", \"SttInd\": \"Y\", \"SundayTrdInd\": \"Y\", \"BackofficeSquareMeter\": 0, \"TrdSquareMeter\": 380, \"BranchCode\": \"' + branchId + '\", \"TransportDropCode\": \"string\", \"TransportRouteCode\": \"string\", \"PosBranchNo\": 1903, \"BrancEmail\": \"A1904@ACKERMANS.CO.ZA\", \"BranchFax\": \"058 4812131\", \"BranchMgrCellphone\": \"string\", \"BranchModemTelephone\": \"string\", \"BranchTelephone\": \"058 4812232\", \"BranchMgrName\": \"string\", \"BranchName\": \"Senekal\", \"CitPickupFreq\": 3, \"SpareFloatAmt\": 1000, \"TillFloatAmt\": 500, \"NoOfTillFloats\": 4, \"CashLimitInDrawer\": 5000, \"TransporterIdNo\": 1, \"PosVersionCode\": \"string\", \"PosVersionStartDate\": \"2020-11-05\", \"LastUpdateDatetime\": \"2020-11-05\", \"Username\": \"POSUpld\", \"LocGeoTypeIdNo\": 2, \"CentralPosVersion\": \"string\" }, { \"BranchIdNo\": 2565, \"BankDetailNo\": 4, \"BranchClimateIdNo\": \"string\", \"BranchConceptIdNo\": \"99\", \"BranchNodeIdNo\": 0, \"CompanyIdNo\": '+ companyId +', \"DivAdminMgrIdNo\": 38, \"InterfSystemIdNo\": 20, \"LbrDemarcGrpIdNo\": 4, \"LocConceptIdNo\": 0, \"LocDivNo\": 26, \"LoctypeIdNo\": 33, \"ProvinceIdNo\": ' + provinceId + ', \"BranchFinGradeCode\": \"F\", \"BranchTypeCode\": \"' + branchTypeCode + '\", \"LegalEntityCode\": \"ACLTD\", \"LocPayDivCode\": \"TBC\", \"TransportHubCode\": \"string\", \"LastCommsDate\": \"2020-11-05\", \"LogisticsCloseDate\": \"2020-11-05\", \"LogisticsOpenDate\": \"2020-11-05\", \"ModelCalcStartDate\": \"2020-11-05\", \"TrdCloseDate\": \"2020-11-05\", \"TrdOpenDate\": \"2020-11-05\", \"CashInTransitInd\": \"Y\", \"CashManagementInd\": \"Y\", \"DropSageInd\": \"Y\", \"SpareFloatAmdInd\": \"Y\", \"SttInd\": \"Y\", \"SundayTrdInd\": \"Y\", \"BackofficeSquareMeter\": 0, \"TrdSquareMeter\": 414, \"BranchCode\": \"' + branchId + '\", \"TransportDropCode\": \"string\", \"TransportRouteCode\": \"string\", \"PosBranchNo\": 1903, \"BrancEmail\": \"a1902@ackermans.co.za\", \"BranchFax\": \"string\", \"BranchMgrCellphone\": \"string\", \"BranchModemTelephone\": \"string\", \"BranchTelephone\": \"014 5778086\", \"BranchMgrName\": \"string\", \"BranchName\": \"Magaliesburg Magalies Village Square\", \"CitPickupFreq\": 1, \"SpareFloatAmt\": 5000, \"TillFloatAmt\": 500, \"NoOfTillFloats\": 6, \"CashLimitInDrawer\": 2500, \"TransporterIdNo\": 1, \"PosVersionCode\": \"string\", \"PosVersionStartDate\": \"2020-11-05\", \"LastUpdateDatetime\": \"2020-11-05\", \"Username\": \"POSUpld\", \"LocGeoTypeIdNo\": 2, \"CentralPosVersion\": \"string\" }]}');\n  }\n}"
+      }
+    }
+  },
+  "definitions": {
+    "error": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        }
+      }
+    },
+    "branches": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/branch"
+      },
+      "xml": {
+        "name": "branches"
+      }
+    },
+    "branch": {
+      "type": "object",
+      "xml": {
+        "name": "branch"
+      },
+      "properties": {
+        "BranchIdNo": {
+          "type": "number"
+        },
+        "BankDetailNo": {
+          "type": "number"
+        },
+        "BranchClimateIdNo": {
+          "type": "string"
+        },
+        "BranchConceptIdNo": {
+          "type": "string"
+        },
+        "BranchNodeIdNo": {
+          "type": "number"
+        },
+        "CompanyIdNo": {
+          "type": "number"
+        },
+        "DivAdminMgrIdNo": {
+          "type": "number"
+        },
+        "InterfSystemIdNo": {
+          "type": "number"
+        },
+        "LbrDemarcGrpIdNo": {
+          "type": "number"
+        },
+        "LocConceptIdNo": {
+          "type": "number"
+        },
+        "LocDivNo": {
+          "type": "number"
+        },
+        "LoctypeIdNo": {
+          "type": "number"
+        },
+        "ProvinceIdNo": {
+          "type": "number"
+        },
+        "BranchFinGradeCode": {
+          "type": "string"
+        },
+        "BranchTypeCode": {
+          "type": "string"
+        },
+        "LegalEntityCode": {
+          "type": "string"
+        },
+        "LocPayDivCode": {
+          "type": "string"
+        },
+        "TransportHubCode": {
+          "type": "string"
+        },
+        "LastCommsDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "LogisticsCloseDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "LogisticsOpenDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "ModelCalcStartDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "TrdCloseDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "TrdOpenDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "CashInTransitInd": {
+          "type": "string"
+        },
+        "CashManagementInd": {
+          "type": "string"
+        },
+        "DropSageInd": {
+          "type": "string"
+        },
+        "SpareFloatAmdInd": {
+          "type": "string"
+        },
+        "SttInd": {
+          "type": "string"
+        },
+        "SundayTrdInd": {
+          "type": "string"
+        },
+        "BackofficeSquareMeter": {
+          "type": "number"
+        },
+        "TrdSquareMeter": {
+          "type": "number"
+        },
+        "BranchCode": {
+          "type": "string"
+        },
+        "TransportDropCode": {
+          "type": "string"
+        },
+        "TransportRouteCode": {
+          "type": "string"
+        },
+        "PosBranchNo": {
+          "type": "number"
+        },
+        "BrancEmail": {
+          "type": "string"
+        },
+        "BranchFax": {
+          "type": "string"
+        },
+        "BranchMgrCellphone": {
+          "type": "string"
+        },
+        "BranchModemTelephone": {
+          "type": "string"
+        },
+        "BranchTelephone": {
+          "type": "string"
+        },
+        "BranchMgrName": {
+          "type": "string"
+        },
+        "BranchName": {
+          "type": "string"
+        },
+        "CitPickupFreq": {
+          "type": "number"
+        },
+        "SpareFloatAmt": {
+          "type": "number"
+        },
+        "TillFloatAmt": {
+          "type": "number"
+        },
+        "NoOfTillFloats": {
+          "type": "number"
+        },
+        "CashLimitInDrawer": {
+          "type": "number"
+        },
+        "TransporterIdNo": {
+          "type": "number"
+        },
+        "PosVersionCode": {
+          "type": "string"
+        },
+        "PosVersionStartDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "LastUpdateDatetime": {
+          "type": "string",
+          "format": "date"
+        },
+        "Username": {
+          "type": "string"
+        },
+        "LocGeoTypeIdNo": {
+          "type": "number"
+        },
+        "CentralPosVersion": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

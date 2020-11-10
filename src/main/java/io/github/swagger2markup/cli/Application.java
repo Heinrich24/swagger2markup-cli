@@ -20,6 +20,8 @@ import io.github.swagger2markup.Swagger2MarkupConfig;
 import io.github.swagger2markup.Swagger2MarkupConverter;
 import io.github.swagger2markup.builder.Swagger2MarkupConfigBuilder;
 import io.github.swagger2markup.utils.URIUtils;
+import io.swagger.models.Path;
+
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.builder.fluent.Configurations;
 import org.apache.commons.configuration2.ex.ConfigurationException;
@@ -51,7 +53,8 @@ public class Application implements Runnable{
     public String configFile;
 
     public static void main(String[] args) {
-        Cli.CliBuilder<Runnable> builder = Cli.<Runnable>builder("swagger2markup")
+        @SuppressWarnings("unchecked")
+		Cli.CliBuilder<Runnable> builder = Cli.<Runnable>builder("swagger2markup")
                     .withDescription("Converts a Swagger JSON or YAML file into Markup documents")
                     .withDefaultCommand(Help.class)
                     .withCommands(Help.class, Application.class);
@@ -74,6 +77,8 @@ public class Application implements Runnable{
             }
             swagger2MarkupConfig = new Swagger2MarkupConfigBuilder(config).build();
         }
+        
+      
         Swagger2MarkupConverter.Builder converterBuilder = Swagger2MarkupConverter.from(URIUtils.create(swaggerInput));
         if(swagger2MarkupConfig != null){
             converterBuilder.withConfig(swagger2MarkupConfig);
